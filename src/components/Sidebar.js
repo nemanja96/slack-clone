@@ -15,20 +15,25 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import { db } from '../firebase';
 import { useCollection } from 'react-firebase-hooks/firestore';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../features/userSlice';
 
 function Sidebar() {
 
-    const [channels, loading, error] = useCollection(db.collection("rooms"));
+    const [channels] = useCollection(db.collection("rooms"));
+
+    const user = useSelector(selectUser);
 
   return (
     <SidebarContainer>
         <SidebarHeader>
             <SidebarInfo>
-                <h2>Nemanja</h2>
+                <h2>{user?.displayName}</h2>
                 <h3>
                     <FiberManualRecordIcon />
-                    Nemanja Radivojevic
+                    {user?.displayName}
                 </h3>
+                <h4>{user?.email}</h4>
             </SidebarInfo>
             <CreateIcon />
         </SidebarHeader>
@@ -106,5 +111,11 @@ const SidebarInfo = styled.div`
             margin-right: 2px;
             color: green;
         }
+    }
+
+    > h4{
+        font-size: 13px;
+        font-weight: 400;
+        margin-top: 5px;
     }
 `

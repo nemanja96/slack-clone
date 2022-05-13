@@ -3,13 +3,26 @@ import styled from 'styled-components';
 import Avatar from '@mui/material/Avatar';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import SearchIcon from '@mui/icons-material/Search';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import LogoutIcon from '@mui/icons-material/Logout';
+import IconButton from '@mui/material/IconButton';
+import { auth } from '../firebase';
+import { logout, selectUser } from '../features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Header() {
+
+    const dispatch = useDispatch();
+
+    const user = useSelector(selectUser);
+
+    const logOut = () => {
+        auth.signOut().then(dispatch(logout()));
+    }
+
   return (
     <HeaderContainer>
         <HeaderLeft>
-            <HeaderAvatar />
+            <HeaderAvatar src={user?.photoUrl} />
             <AccessTimeIcon />
         </HeaderLeft>
         <HeaderSearch>
@@ -17,7 +30,9 @@ function Header() {
             <input placeholder='Search' />
         </HeaderSearch>
         <HeaderRight>
-            <HelpOutlineIcon />
+            <IconButton className="icon-btn">
+                <LogoutIcon onClick={logOut} />
+            </IconButton>
         </HeaderRight>
     </HeaderContainer>
   )
@@ -83,8 +98,15 @@ const HeaderRight = styled.div`
     display: flex;
     align-items: flex-end;
     
-    > .MuiSvgIcon-root{
+    > .icon-btn {
+        display: flex;
+        align-items: flex-end;
         margin-left: auto;
         margin-right: 20px;
+
+        > .MuiSvgIcon-root{
+        color: white !important;
     }
+    }
+
 `
