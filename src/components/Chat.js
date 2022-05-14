@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -7,8 +7,11 @@ import { useSelector } from 'react-redux';
 import { selectRoomId } from '../features/appSlice';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import { db } from '../firebase';
+import Message from './Message';
 
 function Chat() {
+
+    const chatRef = useRef(null);
 
     const roomId = useSelector(selectRoomId);
 
@@ -16,9 +19,15 @@ function Chat() {
         roomId && db.collection("rooms").doc(roomId)
     )
 
-    const [roomMessages] = useCollection(
+    const [roomMessages, loading] = useCollection(
         roomId && db.collection("rooms").doc(roomId).collection("messages").orderBy("timestamp", "asc")
     )
+
+    useEffect(() => {
+        chatRef?.current?.scrollIntoView({
+            behavior: "smooth"
+        });
+    }, [roomId, loading])
     
 
   return (
@@ -38,8 +47,20 @@ function Chat() {
                     </p>
                 </HeaderRight>
             </Header>
-            <ChatMessages></ChatMessages>
-            <ChatInput channelId={roomId} channelName={roomDetails?.data().name} />
+
+            <ChatMessages>
+                {
+                    roomMessages?.docs.map(doc => {
+                        const { message, timestamp, user, userImage } = doc.data();
+
+                        return (
+                            <Message key={doc.id} message={message} timestamp={timestamp} user={user} userImage={userImage} />
+                        )
+                    })
+                }
+            </ChatMessages>
+            <ChatBottom ref={chatRef} />
+            <ChatInput chatRef={chatRef} channelId={roomId} channelName={roomDetails?.data().name} />
         </>
     </ChatContainer>
   )
@@ -89,4 +110,8 @@ const HeaderRight = styled.div`
 `
 const ChatMessages = styled.div`
 
+`
+
+const ChatBottom = styled.div`
+    padding-bottom: 200px;
 `

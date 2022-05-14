@@ -3,10 +3,14 @@ import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import firebase from 'firebase/compat/app';
 import { db } from '../firebase';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../features/userSlice';
 
-function ChatInput({channelName, channelId}) {
+function ChatInput({channelName, channelId, chatRef}) {
 
     const [input, setInput] = useState('');
+
+    const user = useSelector(selectUser);
 
     const sendMessage = (e) => {
         e.preventDefault();
@@ -18,12 +22,16 @@ function ChatInput({channelName, channelId}) {
         db.collection("rooms").doc(channelId).collection("messages").add({
             messages: input,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            user: "Nemanja Radivojevic",
-            userImage: ''
+            user: user?.displayName,
+            userImage: user?.photoUrl,
         })
 
         setInput('');
     }
+
+    chatRef.current.scrollIntoView({
+        behavior: "smooth"
+    })
 
   return (
     <ChatInputContainer>
