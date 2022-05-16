@@ -51,10 +51,10 @@ function Chat() {
             <ChatMessages>
                 {
                     roomMessages?.docs.map(doc => {
-                        const { message, timestamp, user, userImage } = doc.data();
+                        const { messages, timestamp, user, userImage } = doc.data();
 
                         return (
-                            <Message key={doc.id} message={message} timestamp={timestamp} user={user} userImage={userImage} />
+                            <Message key={doc.id} messages={messages} timestamp={timestamp} user={user} userImage={userImage} />
                         )
                     })
                 }
@@ -73,6 +73,19 @@ const ChatContainer = styled.div`
     flex-grow: 1;
     overflow-y: scroll;
     margin-top: 60px;
+
+    @media screen and (max-width: 650px){
+        flex: 1;
+    }
+
+    @media screen and (max-width: 550px){
+        flex: 1;
+    }
+
+    @media screen and (max-width: 500px){
+        flex: 1;
+    }
+
 `
 const Header = styled.div`
     display: flex;

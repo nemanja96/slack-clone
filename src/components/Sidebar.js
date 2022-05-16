@@ -13,16 +13,15 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
-import { db } from '../firebase';
+import { auth, db } from '../firebase';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../features/userSlice';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 function Sidebar() {
 
     const [channels] = useCollection(db.collection("rooms"));
 
-    const user = useSelector(selectUser);
+    const [user] = useAuthState(auth);
 
   return (
     <SidebarContainer>
@@ -65,10 +64,31 @@ export default Sidebar
 const SidebarContainer = styled.div`
     background-color: var(--slack-color);
     color: white;
-    flex: 0.3;
+    flex: calc(0.3 - 17px);
     border-top: 1px solid #49274b;
     max-width: 260px;
     margin-top: 60px;
+    overflow-y: scroll;
+
+    @media screen and (max-width: 650px){
+        flex: calc(0.4 - 17px);
+        padding-right: 20px;
+    }
+
+    @media screen and (max-width: 550px){
+        flex: calc(0.4 - 17px);
+        padding-right: 10px;
+    }
+
+    @media screen and (max-width: 500px){
+        flex: 0.3;
+        padding-right: 10px;
+    }
+
+    @media screen and (max-width:400px){
+        flex: 0.4;
+        padding-right: 10px;
+    }
 
     > hr {
         margin-top: 10px;
@@ -88,6 +108,10 @@ const SidebarHeader = styled.div`
         font-size: 18px;
         background: white;
         border-radius: 999px;
+
+        @media screen and (max-width: 650px){
+            display: none !important;
+        }
     }
 `
 
@@ -97,6 +121,9 @@ const SidebarInfo = styled.div`
         font-size: 15px;
         font-weight: 900;
         margin-bottom: 5px;
+        @media screen and (max-width: 450px){
+            font-size: 12px;
+        }
     }
 
     > h3{
@@ -104,6 +131,9 @@ const SidebarInfo = styled.div`
         font-size: 13px;
         font-weight: 400;
         align-items: center;
+        @media screen and (max-width: 450px){
+            font-size: 12px;
+        }
 
         > .MuiSvgIcon-root {
             font-size: 14px;
@@ -117,5 +147,9 @@ const SidebarInfo = styled.div`
         font-size: 13px;
         font-weight: 400;
         margin-top: 5px;
+
+        @media screen and (max-width: 650px){
+            display: none !important;
+        }
     }
 `

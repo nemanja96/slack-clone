@@ -1,17 +1,17 @@
 import React from 'react'
 import styled from 'styled-components';
 
-function Message({ id, message, timestamp, user, userImage }) {
+function Message({ id, messages, timestamp, user, userImage }) {
   return (
     <MessageContainer>
         <img src={userImage} alt="" />
         <MessageInfo>
           <h4>
             {user}{' '}
-            {/* <span>{new Date(timestamp?.toDate().toUTCString())}</span> */}
+                {/* <span>{new Date(timestamp?.toDate().toUTCString())}</span> */}
             <span>Datum</span>
           </h4>
-          <p>{message}</p>
+          <p>{messages}</p>
         </MessageInfo>
     </MessageContainer>
   )
@@ -23,10 +23,16 @@ const MessageContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 20px;
+  @media screen and (max-width: 450px){
+     padding: 10px;    }
 
   > img {
     height: 50px;
     border-radius: 8px;
+
+    @media screen and (max-width: 450px){
+      display: none;
+    }
   }
 `
 

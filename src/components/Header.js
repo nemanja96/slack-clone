@@ -6,23 +6,20 @@ import SearchIcon from '@mui/icons-material/Search';
 import LogoutIcon from '@mui/icons-material/Logout';
 import IconButton from '@mui/material/IconButton';
 import { auth } from '../firebase';
-import { logout, selectUser } from '../features/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 function Header() {
 
-    const dispatch = useDispatch();
-
-    const user = useSelector(selectUser);
+    const [user] = useAuthState(auth);
 
     const logOut = () => {
-        auth.signOut().then(dispatch(logout()));
+        auth.signOut();
     }
 
   return (
     <HeaderContainer>
         <HeaderLeft>
-            <HeaderAvatar src={user?.photoUrl} />
+            <HeaderAvatar src={user?.photoURL} />
             <AccessTimeIcon />
         </HeaderLeft>
         <HeaderSearch>
@@ -30,8 +27,8 @@ function Header() {
             <input placeholder='Search' />
         </HeaderSearch>
         <HeaderRight>
-            <IconButton className="icon-btn">
-                <LogoutIcon onClick={logOut} />
+            <IconButton onClick={logOut} className="icon-btn">
+                <LogoutIcon/>
             </IconButton>
         </HeaderRight>
     </HeaderContainer>
@@ -82,6 +79,10 @@ const HeaderSearch = styled.div`
     padding: 0 50px;
     color: gray;
     border: 1px gray solid;
+
+    @media screen and (max-width: 550px){
+        display: none;
+      }
 
     > input {
         background: transparent;
